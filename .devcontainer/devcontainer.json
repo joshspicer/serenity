@@ -1,0 +1,8 @@
+{
+    "image": "mcr.microsoft.com/vscode/devcontainers/base:ubuntu",
+    "initializeCommand": "./.devcontainer/dependencies.sh",
+    "extensions": [
+        "ms-vscode.cpptools"
+    ],
+    "runArgs": [ "--privileged" ]
+}
