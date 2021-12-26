@@ -203,7 +203,6 @@ extern "C" [[noreturn]] UNMAP_AFTER_INIT void init(BootInfo const& boot_info)
     for (ctor_func_t* ctor = start_ctors; ctor < end_ctors; ctor++)
         (*ctor)();
 
-    APIC::initialize();
     InterruptManagement::initialize();
     ACPI::initialize();
 
@@ -341,11 +340,11 @@ void init_stage2(void*)
     // NOTE: Everything marked READONLY_AFTER_INIT becomes non-writable after this point.
     MM.protect_readonly_after_init_memory();
 
-    // NOTE: Everything marked UNMAP_AFTER_INIT becomes inaccessible after this point.
-    MM.unmap_text_after_init();
-
     // NOTE: Everything in the .ksyms section becomes read-only after this point.
     MM.protect_ksyms_after_init();
+
+    // NOTE: Everything marked UNMAP_AFTER_INIT becomes inaccessible after this point.
+    MM.unmap_text_after_init();
 
     // FIXME: It would be nicer to set the mode from userspace.
     // FIXME: It would be smarter to not hardcode that the first tty is the only graphical one
