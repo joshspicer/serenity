@@ -6,6 +6,11 @@ on: # rebuild any PRs and main branch changes
     branches:
       - main
 
+permissions:
+  contents: read
+  # Push images to GHCR.
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,10 +26,19 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and run dev container task
+      # Image built from .devcontainer/devcontainer.json, with all the required dependencies to compile and run Serenity
+      - name: Build Base Dev Container Image
         uses: devcontainers/ci@v0.3
         with:
-          imageName: ghcr.io/${{ github.repository_owner }}/serenity
+          imageName: ghcr.io/${{ github.repository_owner }}/serenity:base
+          push: always
+
+      # The image above with a pre-compiled build of Serenity
+      - name: Build Dev Container Image with Project Pre-Compiled 
+        uses: devcontainers/ci@v0.3
+        with:
+          imageName: ghcr.io/${{ github.repository_owner }}/serenity:compiled
+          cacheFrom: ghcr.io/${{ github.repository_owner }}/serenity:base
           push: always
           # Compile serenity
           runCmd: Meta/serenity.sh build
