@@ -13,8 +13,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and run dev container task
         uses: devcontainers/ci@v0.3
         with:
+          imageName: ghcr.io/${{ github.repository_owner }}/serenity
+          push: always
           # Compile serenity
           runCmd: Meta/serenity.sh build
