@@ -7,5 +7,5 @@
 // getting you into your development environment faster!
 {
     "name": "SerenityOS (Pre-Built Image)",
-    "image": "ghcr.io/SerenityOS/serenity:base"
+    "image": "ghcr.io/joshspicer/serenity:base"
 }
